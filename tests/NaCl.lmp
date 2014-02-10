@@ -1,0 +1,13 @@
+NaCl.lmp (written by ASE) 
+
+2 	 atoms 
+2  atom types
+0.0 6.5000000000  xlo xhi
+0.0 6.5000000000  ylo yhi
+0.0 7.7000000000  zlo zhi
+
+
+Atoms 
+
+     1   2 0E-10 0E-10 0E-10
+     2   1 0E-10 0E-10 2.3608000000

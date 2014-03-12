@@ -35,12 +35,12 @@ from ase import Atoms
 from ase.parallel import paropen
 from ase.units import GPa
 
-__all__ = ['LAMMPS', 'write_lammps_data']
+__all__ = ['pyLAMMPS', 'write_lammps_data']
 
 # "End mark" used to indicate that the calculation is done
 CALCULATION_END_MARK = '__end_of_ase_invoked_calculation__'
 
-class LAMMPS:
+class pyLAMMPS:
 
     def __init__(self, label='lammps', tmp_dir=None, parameters={},
                  specorder=None, files=[], always_triclinic=False,
@@ -69,7 +69,7 @@ class LAMMPS:
             When using LAMMPS as a spawned subprocess, keep the subprocess
             alive (but idling whn unused) along with the calculator object.
         always_triclinic: bool
-            Force use of a triclinic cell in LAMMPS, even if the cell is
+          Force use of a triclinic cell in LAMMPS, even if the cell is
             a perfect parallelepiped.
         """
 
@@ -385,25 +385,7 @@ class LAMMPS:
             f.write('pair_style lj/cut 2.5 \n' +
                     'pair_coeff * * 1 1 \n' +
                     'mass * 1.0 \n')
-            f.write('\n### run\n' +
-                'fix fix_nve all nve\n' +
-                ('dump dump_all all custom 1 %s id type x y z vx vy vz fx fy fz\n' % lammps_trj) )
-            f.write(('thermo_style custom %s\n' +
-                'thermo_modify flush yes\n' +
-                'thermo 1\n') % (' '.join(self._custom_thermo_args)))
-
-        if 'minimize' in parameters:
-            f.write('minimize %s\n' % parameters['minimize'])
-        if 'run' in parameters:
-            f.write('run %s\n' % parameters['run'])
-        if not (('minimize' in parameters) or ('run' in parameters)):
-            f.write('run 0\n')
-
-        f.write('print "%s"\n' % CALCULATION_END_MARK)
-        f.write('log /dev/stdout\n') # Force LAMMPS to flush log
-
-        if close_in_file:
-            f.close()
+        f.write(self.d)
 
         f.write('print "%s"\n' % CALCULATION_END_MARK)
         f.write('log /dev/stdout\n') # Force LAMMPS to flush log
@@ -776,6 +758,7 @@ def write_lammps_data(fileobj, atoms, specorder=None,atom_style='atomic', force_
             f.write('%d %s\n' %(i+1, d[spec]))
     if close_file:
         f.close()
+
 
 
 if __name__ == '__main__':

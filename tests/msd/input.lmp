@@ -1,0 +1,50 @@
+# (written by pyLammps)
+
+atom_style charge
+units metal 
+boundary p p p 
+read_data data.lmp
+
+# Groups
+group La type 1
+group Li type 2
+group O type 3
+group Zr type 4
+
+### interactions 
+kspace_style ewald 1.0e-5 
+pair_style buck/coul/long 8.0 
+pair_coeff * * 0.00  0.100000  0.000000
+pair_coeff 1 3 5436.827  0.293900  0.000000
+pair_coeff 3 4 7290.347  0.261000  0.000000
+pair_coeff 3 3 25.410  0.693700 32.320000
+pair_coeff 2 3 426.480  0.300000  0.000000
+
+fix 1 all nvt temp 2700 2700 100
+compute msd all msd
+compute msdLa La msd
+compute msdLi Li msd
+compute msdO O msd
+compute msdZr Zr msd
+
+thermo 100
+thermo_style custom step time temp pe ke etotal press
+dump            1 all custom 100 xyz.dat id type x y z
+dump            2 all custom 100 velocity.dat id type vx vy vz
+dump            3 all custom 100 forces.dat id type fx fy fz
+
+variable t equal step*dt
+variable msd_tot equal c_msd[4]
+fix tot_msd all print 100  "${t}    ${msd_tot}" file total.msd screen no 
+variable msd_La equal c_msdLa[4]
+fix La_msd all print 100 "${t}    ${msd_La}" file La.msd screen no 
+variable msd_Li equal c_msdLi[4]
+fix Li_msd all print 100 "${t}    ${msd_Li}" file Li.msd screen no 
+variable msd_O equal c_msdO[4]
+fix O_msd all print 100 "${t}    ${msd_O}" file O.msd screen no 
+variable msd_Zr equal c_msdZr[4]
+fix Zr_msd all print 100 "${t}    ${msd_Zr}" file Zr.msd screen no 
+
+run 20000
+
+# END

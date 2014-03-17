@@ -1,3 +1,4 @@
+
 import os
 import shutil
 import shlex
@@ -203,7 +204,32 @@ class pylammps:
 
   #      if self.calculation_required(force=force):
   #          self.write_input()
-        p = Popen(['$LAMMPS_COMMAND < ./input.lmp'],shell=True,stdout=PIPE,stderr=PIPE)
+        script = '''#!/bin/bash
+#$ -S /bin/bash
+#$ -cwd
+#$ -V
+#$ -N test
+#$ -P cr_liion_materials
+#$ -l excl=true
+#$ -l h_rt=1:00:00
+#$ -q regular
+#$ -pe openmpi 4
+
+MPI_CMD="mpirun"
+LAMMPS=$LAMMPS_COMMAND
+$MPI_CMD $LAMMPS < input.lmp'''
+
+        f = paropen('qscript', 'w')
+        f.write(script)
+        f.close()
+
+        p = Popen(['qsub qscript'],shell=True,stdout=PIPE,stderr=PIPE)
+        out, err = p.communicate()
+        if out=='' or err !='':
+            raise Exception('something went wrong in qsub:\n\n{0}'.format(err))
+        f = paropen('jobid','w')
+        f.write(out)
+        f.close()
         self.status = 'running'
         return
 
@@ -377,7 +403,6 @@ class pylammps:
 
         if masses == True:
             d = dict(list(set(zip(atoms.get_chemical_symbols(),atoms.get_masses()))))
-            print d
             f.write('\n\n')
             f.write('Masses\n\n')
             for i,spec in enumerate(species):

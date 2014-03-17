@@ -45,6 +45,6 @@ fix O_msd all print 100 "${t}    ${msd_O}" file O.msd screen no
 variable msd_Zr equal c_msdZr[4]
 fix Zr_msd all print 100 "${t}    ${msd_Zr}" file Zr.msd screen no 
 
-run 20000
+run 2000
 
 # END

@@ -1,0 +1,14 @@
+#!/bin/bash
+#$ -S /bin/bash
+#$ -cwd
+#$ -V
+#$ -N test
+#$ -P cr_liion_materials
+#$ -l excl=true
+#$ -l h_rt=1:00:00
+#$ -q regular
+#$ -pe openmpi 4
+
+MPI_CMD="mpirun"
+LAMMPS=$LAMMPS_COMMAND
+$MPI_CMD $LAMMPS < input.lmp

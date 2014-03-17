@@ -556,7 +556,7 @@ with pylammps('msd',
                              ['O', 'O',   '25.410  0.693700 32.320000'],
                              ['O', 'Li',  '426.480  0.300000  0.000000']],
                temp = 2700,
-               run = 20000) as calc:
+               run = 2000) as calc:
     calc.calculate()
 
 
@@ -642,3 +642,22 @@ plt.show()
 * Extracting source code
 
 [[elisp:org-babel-tangle]]
+
+
+** Test
+
+#+BEGIN_SRC python
+
+from ase.io import read
+from ase import Atoms
+from pyLammps import *
+
+atoms = read('LLZ-full.cif')
+
+print atoms.get_chemical_symbols()
+
+#+END_SRC
+
+#+RESULTS:
+: ['Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'Li', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'La', 'La', 'La', 'La', 'La', 'La', 'La', 'La', 'La', 'La', 'La', 'La', 'Zr', 'Zr', 'Zr', 'Zr', 'Zr', 'Zr', 'Zr', 'Zr']
+

@@ -1,0 +1,136 @@
+
+* Module to read quantum espresso output
+
+** Source Code
+
+We will first write a module to read the Quantum Espresso output file and return an ASE atoms object.
+
+#+BEGIN_SRC python :tangle read_qe_out.py
+import os
+import numpy as np
+from ase import Atom, Atoms
+def read_out(outfile, pbc =True):
+
+        def read_cell(i, line, lines):
+            new_cell = []
+            if line.lower().startswith('cell_parameters'):
+                alat = float(line.split()[-1].translate(None, '()')) * 0.529177249
+                for j in range(1, 4):
+                    lat = np.array((float(lines[i + j].split()[0]) * alat,
+                                    float(lines[i + j].split()[1]) * alat,
+                                    float(lines[i + j].split()[2]) * alat))
+                    new_cell.append(lat)
+                return new_cell
+            else:
+                return None
+
+        def read_positions(i, line, lines):
+            if line.lower().startswith('atomic_positions'):
+                new_pos = []
+                j = 1
+                new_symbol=[]
+                while len(lines[i + j].split()) > 3:
+                    atom_symbol = lines[i + j].split()[0]
+
+                    new_symbol.append(atom_symbol)
+                    atom_pos = np.array((float(lines[i + j].split()[1]),
+                                         float(lines[i + j].split()[2]),
+                                         float(lines[i + j].split()[3])))
+                    new_pos.append(atom_pos)
+                    j += 1
+
+                return new_symbol, new_pos
+            else:
+                return None, None
+
+        out_file = open(outfile, 'r')
+        lines = out_file.readlines()
+
+
+        for i, line in enumerate(lines):
+            _cell = read_cell(i, line, lines)
+            if not _cell == None:
+                cell = _cell
+
+            _symbols, _scaled_pos = read_positions(i, line, lines)
+            if not _symbols == None:
+                   symbols= _symbols
+            if not _scaled_pos == None:
+                   scaled_pos=_scaled_pos
+
+        atoms = Atoms(symbols=symbols, cell = cell, scaled_positions=scaled_pos, pbc=pbc)
+        return atoms
+
+#+END_SRC
+
+We can save it on our system by by running the code below
+elisp:org-babel-tangle
+
+
+** Testing
+
+#+BEGIN_SRC python
+
+from read_qe_out import read_out
+
+atoms = read_out('espresso.vc-relax.out')
+
+for atom in atoms:
+    if atom.symbol == 'Ta' or atom.symbol == 'W':
+         atom.symbol = 'Zr'
+print atoms
+#+END_SRC
+
+#+RESULTS:
+: Atoms(symbols='La24Li32O96Ta8W8', positions=..., cell=[12.76884677857977, 12.76884677857977, 12.636166269650383], pbc=[True, True, True])
+: Atoms(symbols='La24Li32O96Zr16', positions=..., cell=[12.76884677857977, 12.76884677857977, 12.636166269650383], pbc=[True, True, True])
+
+It looks like it works!
+
+
+* Conductivity Calculations
+
+** Setting up the calculation
+
+#+BEGIN_SRC python
+
+from ase.io import read
+from ase import Atoms
+from pyLammps import *
+from read_qe_out import read_out
+
+
+atoms = read_out('espresso.vc-relax.out')
+
+for atom in atoms:
+    if atom.symbol=='Ta' or atom.symbol=='W':
+        atom.symbol = 'Zr'
+
+charges = dict([('La',3.00),('Zr',4.00),('O',-2.00),('Li',1.00)])
+for atom in atoms:
+     atom.set_charge(charges[atom.get_symbol()])
+
+temperatures = np.linspace(300,1700,15)
+
+for T in temperatures:
+
+    with pylammps('conductivity/temp-{0}'.format(T),
+               atoms=atoms,
+               masses=True,
+               atom_style = 'charge',
+               kspace_style ='ewald 1.0e-5',
+               pair_style = 'buck/coul/long 8.0',
+               pair_coeff = [['*', '*', '0.00  0.100000  0.000000'],
+                             ['La', 'O', '5436.827  0.293900  0.000000'],
+                             ['Zr','O', '7290.347  0.261000  0.000000'],
+                             ['O', 'O',   '25.410  0.693700 32.320000'],
+                             ['O', 'Li',  '426.480  0.300000  0.000000']],
+               temp = T,
+               run = 200000) as calc:
+        calc.calculate()
+
+
+#+END_SRC
+
+#+RESULTS:
+

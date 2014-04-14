@@ -211,9 +211,9 @@ class pylammps:
 #$ -N test
 #$ -P cr_liion_materials
 #$ -l excl=true
-#$ -l h_rt=1:00:00
+#$ -l h_rt=10:00:00
 #$ -q regular
-#$ -pe openmpi 4
+#$ -pe openmpi 10
 
 MPI_CMD="mpirun"
 LAMMPS=$LAMMPS_COMMAND

@@ -6,15 +6,21 @@
 units           metal
 atom_style      charge
 boundary        p p p
-read_data	LLZ.lmp
+read_data	LLZ.data
 
 # Atom definition
 group		La type 1
 group		Zr type 2
 group		O  type 3
 group		Li type 4
-
-
+set		group La charge 3.00
+mass		1 138.91
+set 		group Zr charge 4.00
+mass		2 91.224
+set		group O charge -2.00
+mass		3 15.999
+set		group Li charge 1.00
+mass		4 6.941
 
 # Interatomic potential
 kspace_style	ewald  1.0e-5
@@ -27,19 +33,32 @@ pair_coeff	3 3   25.410  0.693700 32.320000
 pair_coeff	3 4  426.480  0.300000  0.000000
 
 # Simulation parameters (set Tdamp~30-50 for T < 500 K)
-fix             1 all nvt temp 1700 1700 100
+fix             1 all nvt temp 300 300 30
 compute         msd all msd
-compute         msdLi Li msd
-compute         msdLa La msd
-compute         msdZr Zr msd
-compute         msdO O msd
+compute         msdLi 4 msd
+compute         msdLa 1 msd
+compute         msdZr 2 msd
+compute         msdO 3 msd
 
-thermo		200
-thermo_style    custom step time temp etotal press c_msd[4] c_msdLi[4] c_msdLa[4] c_msdZr[4] c_msdO[4]
+thermo		100
+#thermo_style    custom step time temp press px py pz pe ke etotal c_msd c_msdLi c_msdLa c_msdZr c_msdO
 dump            1 all custom 200 xyz.dat id type x y z
 dump            2 all custom 200 velocity.dat id type vx vy vz
 dump            3 all custom 200 forces.dat id type fx fy fz
 
+variable t equal step*dt
+variable msd_tot equal c_msd[4]
+fix tot_msd all print 100  "${t}    ${msd_tot}" file total.msd screen no
+variable msd_La equal c_msdLa[4]
+fix La_msd all print 100 "${t}    ${msd_La}" file La.msd screen no
+variable msd_Li equal c_msdLi[4]
+fix Li_msd all print 100 "${t}    ${msd_Li}" file Li.msd screen no
+variable msd_O equal c_msdO[4]
+fix O_msd all print 100 "${t}    ${msd_O}" file O.msd screen no
+variable msd_Zr equal c_msdZr[4]
+fix Zr_msd all print 100 "${t}    ${msd_Zr}" file Zr.msd screen no
+
 # Run simulation (dt = 1 fs, t = 10 ns)
 timestep        0.001
-run             20000
+run             10000000
+

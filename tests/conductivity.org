@@ -1,4 +1,5 @@
 
+
 * Module to read quantum espresso output
 
 ** Source Code
@@ -63,7 +64,8 @@ def read_out(outfile, pbc =True):
 
 #+END_SRC
 
-We can save it on our system by by running the code below
+We can save it on our system by by running the code:
+
 elisp:org-babel-tangle
 
 
@@ -79,18 +81,392 @@ for atom in atoms:
     if atom.symbol == 'Ta' or atom.symbol == 'W':
          atom.symbol = 'Zr'
 print atoms
+print 'Volume = {0} cm^{{3}}'.format(atoms.get_volume() * 10 **(-24))
+print atoms.get_cell()
+
+for atom, position in zip(atoms.get_chemical_symbols(), atoms.get_positions()):
+    print atom, position
 #+END_SRC
 
 #+RESULTS:
-: Atoms(symbols='La24Li32O96Ta8W8', positions=..., cell=[12.76884677857977, 12.76884677857977, 12.636166269650383], pbc=[True, True, True])
-: Atoms(symbols='La24Li32O96Zr16', positions=..., cell=[12.76884677857977, 12.76884677857977, 12.636166269650383], pbc=[True, True, True])
+#+begin_example
+Atoms(symbols='La24Li32O96Zr16', positions=..., cell=[12.76884677857977, 12.76884677857977, 12.636166269650383], pbc=[True, True, True])
+Volume = 2.0602441188e-21 cm^{3}
+[[ 12.76884678   0.           0.        ]
+ [  0.          12.76884678   0.        ]
+ [  0.           0.          12.63616627]]
+La [ 11.13269616   6.38442339   9.4771247 ]
+La [ 1.63615062  6.38442339  3.15904157]
+La [  6.38442339  11.13269616   6.31808313]
+La [ 6.38442339  1.63615062  0.        ]
+La [ 7.8600844  0.         9.4771247]
+La [ 4.90876238  0.          3.15904157]
+La [ 0.          7.8600844   6.31808313]
+La [ 0.          4.90876238  0.        ]
+La [ 9.47266223  9.47266223  7.89760392]
+La [ 3.29618455  3.29618455  1.57952078]
+La [ 3.29618455  9.47266223  4.73856235]
+La [  9.47266223   3.29618455  11.05664549]
+La [ 7.97820186  6.38442339  3.15904157]
+La [ 4.79064492  6.38442339  9.4771247 ]
+La [ 6.38442339  7.97820186  0.        ]
+La [ 6.38442339  4.79064492  6.31808313]
+La [ 11.13471279   0.           3.15904157]
+La [ 1.63413399  0.          9.4771247 ]
+La [  0.          11.13471279   0.        ]
+La [ 0.          1.63413399  6.31808313]
+La [ 9.60416472  3.16468206  4.73856235]
+La [  3.16468206   9.60416472  11.05664549]
+La [ 9.60416472  9.60416472  1.57952078]
+La [ 3.16468206  3.16468206  7.89760392]
+O [ 0.27290702  7.69034407  8.78710937]
+O [ 12.49593976   5.07850271   2.46902623]
+O [ 5.07850271  0.27290702  5.6280678 ]
+O [  7.69034407  12.49593976  11.94615093]
+O [ 12.49593976   7.69034407   3.8490569 ]
+O [  0.27290702   5.07850271  10.16714004]
+O [ 7.69034407  0.27290702  7.00809847]
+O [  5.07850271  12.49593976   0.69001533]
+O [  5.97773708   1.40409025  10.0929136 ]
+O [  6.7911097   11.36475653   3.77483047]
+O [ 11.36475653   5.97773708   6.93387204]
+O [ 1.40409025  6.7911097   0.6157889 ]
+O [ 6.7911097   1.40409025  2.54325267]
+O [  5.97773708  11.36475653   8.8613358 ]
+O [ 1.40409025  5.97773708  5.70229423]
+O [ 11.36475653   6.7911097   12.02037737]
+O [ 12.10554148   9.97380992   7.56009997]
+O [ 0.6633053   2.79503686  1.24201683]
+O [  2.79503686  12.10554148   4.4010584 ]
+O [  9.97380992   0.6633053   10.71914153]
+O [ 0.6633053   9.97380992  5.0760663 ]
+O [ 12.10554148   2.79503686  11.39414944]
+O [  9.97380992  12.10554148   8.23510787]
+O [ 2.79503686  0.6633053   1.91702474]
+O [ 5.77278106  9.19492306  4.93402613]
+O [  6.99606572   3.57392372  11.25210926]
+O [ 3.57392372  5.77278106  1.77498456]
+O [ 9.19492306  6.99606572  8.09306769]
+O [ 6.99606572  9.19492306  7.70214014]
+O [ 5.77278106  3.57392372  1.38405701]
+O [  9.19492306   5.77278106  10.86118171]
+O [ 3.57392372  6.99606572  4.54309857]
+O [ 10.87198229   8.97189912   9.79339216]
+O [ 1.89686449  3.79694766  3.47530903]
+O [  3.79694766  10.87198229   6.63435059]
+O [ 8.97189912  1.89686449  0.31626746]
+O [ 1.89686449  8.97189912  2.84277411]
+O [ 10.87198229   3.79694766   9.16085724]
+O [  8.97189912  10.87198229   6.00181568]
+O [  3.79694766   1.89686449  12.31989881]
+O [ 8.17176559  2.53995729  9.10406019]
+O [  4.59708119  10.22888948   2.78597706]
+O [ 10.22888948   8.17176559   5.94501862]
+O [  2.53995729   4.59708119  12.26310176]
+O [ 4.59708119  2.53995729  3.53210608]
+O [  8.17176559  10.22888948   9.85018921]
+O [ 2.53995729  8.17176559  6.69114765]
+O [ 10.22888948   4.59708119   0.37306451]
+O [ 6.02259373  5.00557473  3.81579432]
+O [  6.74625305   7.76327205  10.13387745]
+O [ 7.76327205  6.02259373  0.65675275]
+O [ 5.00557473  6.74625305  6.97483588]
+O [ 6.74625305  5.00557473  8.82037195]
+O [ 6.02259373  7.76327205  2.50228882]
+O [  5.00557473   6.02259373  11.97941352]
+O [ 7.76327205  6.74625305  5.66133038]
+O [  0.35013037  11.45111714   2.55646778]
+O [ 12.41871641   1.31772964   8.87455092]
+O [  1.31772964   0.35013037  12.03359249]
+O [ 11.45111714  12.41871641   5.71550935]
+O [ 12.41871641  11.45111714  10.07969849]
+O [ 0.35013037  1.31772964  3.76161535]
+O [ 11.45111714   0.35013037   0.60257378]
+O [  1.31772964  12.41871641   6.92065692]
+O [ 7.01733093  2.83109069  4.98744696]
+O [  5.75151585   9.93775609  11.3055301 ]
+O [ 9.93775609  7.01733093  1.82840539]
+O [ 2.83109069  5.75151585  8.14648853]
+O [ 5.75151585  2.83109069  7.64871931]
+O [ 7.01733093  9.93775609  1.33063617]
+O [  2.83109069   7.01733093  10.80776088]
+O [ 9.93775609  5.75151585  4.48967774]
+O [ 0.71375138  3.52283243  7.66307195]
+O [ 12.0550954    9.24601435   1.34498881]
+O [ 9.24601435  0.71375138  4.50403038]
+O [  3.52283243  12.0550954   10.82211351]
+O [ 12.0550954    3.52283243   4.97309432]
+O [  0.71375138   9.24601435  11.29117746]
+O [ 3.52283243  0.71375138  8.13213589]
+O [  9.24601435  12.0550954    1.81405276]
+O [ 8.20270534  3.86272608  2.86150378]
+O [ 4.56614143  8.9061207   9.17958691]
+O [  8.9061207    8.20270534  12.33862848]
+O [ 3.86272608  4.56614143  6.02054534]
+O [ 4.56614143  3.86272608  9.77466249]
+O [ 8.20270534  8.9061207   3.45657936]
+O [ 3.86272608  8.20270534  0.29753779]
+O [ 8.9061207   4.56614143  6.61562093]
+O [ 10.95543246  10.21933254   3.65937622]
+O [ 1.81341432  2.54951424  9.97745935]
+O [  2.54951424  10.95543246   0.50033465]
+O [ 10.21933254   1.81341432   6.81841779]
+O [  1.81341432  10.21933254   8.97679005]
+O [ 10.95543246   2.54951424   2.65870692]
+O [ 10.21933254  10.95543246  12.13583162]
+O [ 2.54951424  1.81341432  5.81774848]
+Li [ 7.96188005  6.38442339  9.4771247 ]
+Li [ 4.80696672  6.38442339  3.15904157]
+Li [ 6.38442339  7.96188005  6.31808313]
+Li [ 6.38442339  4.80696672  0.        ]
+Li [  6.38442339  11.22000862   0.        ]
+Li [ 6.38442339  1.54883816  6.31808313]
+Li [ 1.54883816  6.38442339  9.4771247 ]
+Li [ 11.22000862   6.38442339   3.15904157]
+Li [ 11.60935271  10.57672342   5.60953741]
+Li [  1.15949407   2.19212336  11.92762054]
+Li [  2.19212336  11.60935271   2.45049584]
+Li [ 10.57672342   1.15949407   8.76857897]
+Li [  1.15949407  10.57672342   7.02662886]
+Li [ 11.60935271   2.19212336   0.70854573]
+Li [ 10.57672342  11.60935271  10.18567043]
+Li [ 2.19212336  1.15949407  3.8675873 ]
+Li [ 0.          4.74165062  6.31808313]
+Li [ 0.          8.02719615  0.        ]
+Li [ 8.02719615  0.          3.15904157]
+Li [ 4.74165062  0.          9.4771247 ]
+Zr [  9.51392595e+00   2.78184650e-03   1.44759921e-03]
+Zr [  3.25492083e+00  -2.78184650e-03   6.31953073e+00]
+Zr [ -2.78184650e-03   9.51392595e+00   9.47857230e+00]
+Zr [  2.78184650e-03   3.25492083e+00   3.16048917e+00]
+Zr [  3.25492083e+00   2.78184650e-03  -1.44759921e-03]
+Zr [  9.51392595e+00  -2.78184650e-03   6.31663554e+00]
+Zr [  2.78184650e-03   9.51392595e+00   3.15759397e+00]
+Zr [ -2.78184650e-03   3.25492083e+00   9.47567710e+00]
+Zr [ 9.57481469  6.36778719  6.27764151]
+Zr [ 3.19403209  6.40105959 -0.04044162]
+Zr [ 6.40105959  9.57481469  3.11859995]
+Zr [ 6.36778719  3.19403209  9.43668308]
+Zr [ 3.19403209  6.36778719  6.35852476]
+Zr [ 9.57481469  6.40105959  0.04044162]
+Zr [ 6.36778719  9.57481469  9.51756632]
+Zr [ 6.40105959  3.19403209  3.19948319]
+Li [  0.91739512  11.85145165   4.73856235]
+Li [ 11.85145165   0.91739512  11.05664549]
+Li [ 0.91739512  0.91739512  1.57952078]
+Li [ 11.85145165  11.85145165   7.89760392]
+Li [ 9.46374875  9.51348434  4.72018516]
+Li [  3.30509803   3.25536244  11.03826829]
+Li [ 3.25536244  9.46374875  1.56114359]
+Li [ 9.51348434  3.30509803  7.87922672]
+Li [ 3.30509803  9.51348434  7.91598111]
+Li [ 9.46374875  3.25536244  1.59789798]
+Li [  9.51348434   9.46374875  11.07502268]
+Li [ 3.25536244  3.30509803  4.75693954]
+#+end_example
 
 It looks like it works!
 
 
 * Conductivity Calculations
 
-** Setting up the calculation
+
+** Starting at 0 K
+
+*** Set up
+
+#+BEGIN_SRC python
+
+from ase.io import read
+from ase import Atoms
+from pyLammps import *
+from read_qe_out import read_out
+import numpy as np
+
+atoms = read_out('espresso.vc-relax.out')
+
+for atom in atoms:
+    if atom.symbol=='Ta' or atom.symbol=='W':
+        atom.symbol = 'Zr'
+
+charges = dict([('La',3.00),('Zr',4.00),('O',-2.00),('Li',1.00)])
+for atom in atoms:
+     atom.set_charge(charges[atom.get_symbol()])
+
+temperatures = np.linspace(300, 1700, 15)
+
+for T in temperatures:
+
+    with pylammps('conductivity/temp-{0}'.format(T),
+               atoms=atoms,
+               masses=True,
+               atom_style = 'charge',
+               kspace_style ='ewald 1.0e-5',
+               pair_style = 'buck/coul/long 8.0',
+               pair_coeff = [['*', '*', '0.00  0.100000  0.000000'],
+                             ['La', 'O', '5436.827  0.293900  0.000000'],
+                             ['Zr','O', '7290.347  0.261000  0.000000'],
+                             ['O', 'O',   '25.410  0.693700 32.320000'],
+                             ['O', 'Li',  '426.480  0.300000  0.000000']],
+               temp = T,
+               run = 10000000) as calc:
+        calc.calculate()
+
+
+#+END_SRC
+
+#+RESULTS:
+
+
+*** 300-400 Test
+
+#+BEGIN_SRC python
+
+from ase.io import read
+from ase import Atoms
+from pyLammps import *
+from read_qe_out import read_out
+import numpy as np
+
+atoms = read_out('espresso.vc-relax.out')
+
+for atom in atoms:
+    if atom.symbol=='Ta' or atom.symbol=='W':
+        atom.symbol = 'Zr'
+
+charges = dict([('La',3.00),('Zr',4.00),('O',-2.00),('Li',1.00)])
+for atom in atoms:
+     atom.set_charge(charges[atom.get_symbol()])
+
+temperatures = np.linspace(310, 390, 9)
+
+for T in temperatures:
+
+    with pylammps('conductivity/temp-{0}'.format(T),
+               atoms=atoms,
+               masses=True,
+               atom_style = 'charge',
+               kspace_style ='ewald 1.0e-5',
+               pair_style = 'buck/coul/long 8.0',
+               pair_coeff = [['*', '*', '0.00  0.100000  0.000000'],
+                             ['La', 'O', '5436.827  0.293900  0.000000'],
+                             ['Zr','O', '7290.347  0.261000  0.000000'],
+                             ['O', 'O',   '25.410  0.693700 32.320000'],
+                             ['O', 'Li',  '426.480  0.300000  0.000000']],
+               temp = T,
+               run = 10000000) as calc:
+        calc.calculate()
+
+
+#+END_SRC
+
+#+RESULTS:
+
+*** Mean Square Displacements
+
+#+BEGIN_SRC python
+from pycse import regress
+import matplotlib.pyplot as plt
+import numpy as np
+temperatures = np.linspace(400,1700,14)
+D = []
+for T in temperatures:
+
+    f = 'conductivity/temp-{0}/Li.msd'.format(T)
+    t,msd=np.loadtxt(f,skiprows=1,unpack=True)
+    plt.plot(t,msd, label='{0}'.format(T))
+
+    t_cut = t[40000:]
+    msd_cut = msd[40000:]
+
+    t_vec = np.column_stack([t_cut**1, t_cut**0])
+
+    p, pint, se = regress(t_vec, msd_cut, 0.05)
+
+    D.append(p[0]/6.)
+    msd_vec = np.dot(t_vec,p)
+    plt.plot(t_vec, msd_vec)
+
+
+plt.xlabel('Time (ps)')
+plt.ylabel('MSD ($\AA^{2}$)')
+plt.legend(loc = 'best')
+plt.savefig('conductivity/images/MSD.png')
+plt.show()
+
+D = np.array(D)
+
+y = np.log(D)
+T_inv = 1000. / np.array(temperatures)
+
+
+
+plt.plot(T_inv, y, 'o')
+
+
+T_vec = np.column_stack([T_inv**1, T_inv**0])
+
+p, pint, se = regress(T_vec, y, 0.10)
+
+y_vec = np.dot(T_vec,p)
+
+plt.plot(T_inv, y_vec,'-')
+plt.show()
+
+Slope = p[0]
+
+Ea = - Slope * 8.6173324 * 10**(-2)
+
+print 'The activation energy is {0} eV'.format(Ea)
+
+# Diffusivity
+
+q = 1.60217657e-19 # Coulombs
+
+kb = 1.3806488e-23 # Boltzmann Constant
+
+N = 32. # No of lithiums
+
+V = 2.0602441188* 10**(-21) # cell volume in cm3
+
+n0 = N/V
+print '\n|T|D|$\sigma$|'
+print '|-'
+
+for d, T in zip(D, temperatures):
+
+    sigma = n0 * q * q * d * 10 **(-4) / (kb*T)
+
+    print '|{0}|{1}|{2}|'.format(T, d, sigma)
+
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+The activation energy is 0.234591922212 eV
+
+|      T |                D |        $\sigma$ |
+|--------+------------------+-----------------|
+|  400.0 | 0.00313797343432 | 0.0226546887331 |
+|  500.0 | 0.00833245776225 | 0.0481251332266 |
+|  600.0 |  0.0140109294524 | 0.0674348699351 |
+|  700.0 |  0.0305575733073 |  0.126063584158 |
+|  800.0 |  0.0215385858361 | 0.0777492174617 |
+|  900.0 |  0.0712859028083 |  0.228733604025 |
+| 1000.0 |  0.0774077457568 |   0.22353897155 |
+| 1100.0 |    0.13736561992 |   0.36062364071 |
+| 1200.0 |   0.222884694333 |  0.536374136488 |
+| 1300.0 |   0.225564816812 |  0.501068193898 |
+| 1400.0 |   0.274532082874 |     0.566283487 |
+| 1500.0 |   0.332122618029 |  0.639404990951 |
+| 1600.0 |   0.585220833808 |    1.0562546264 |
+| 1700.0 |   0.356925287985 |  0.606313482216 |
+#+end_example
+
+[[./conductivity/images/MSD.png]]
+
+
+** Starting with initial velocities
 
 #+BEGIN_SRC python
 
@@ -114,7 +490,7 @@ temperatures = np.linspace(300,1700,15)
 
 for T in temperatures:
 
-    with pylammps('conductivity/temp-{0}'.format(T),
+    with pylammps('conductivity/vel-{0}'.format(T),
                atoms=atoms,
                masses=True,
                atom_style = 'charge',
@@ -126,7 +502,8 @@ for T in temperatures:
                              ['O', 'O',   '25.410  0.693700 32.320000'],
                              ['O', 'Li',  '426.480  0.300000  0.000000']],
                temp = T,
-               run = 200000) as calc:
+               velocity = 'all create {0} 12345'.format(T),
+               run = 2000000) as calc:
         calc.calculate()
 
 
@@ -134,3 +511,542 @@ for T in temperatures:
 
 #+RESULTS:
 
+
+
+* LLZ-full
+
+** DONE Submission
+#+BEGIN_SRC python
+
+from ase.io import read
+from ase import Atoms
+from pyLammps import *
+
+atoms = read('LLZ-full.cif')
+#specorder = ['La','Zr','O','Li']
+
+charges = dict([('La',3.00),('Zr',4.00),('O',-2.00),('Li',1.00)])
+for atom in atoms:
+     atom.set_charge(charges[atom.get_symbol()])
+
+print atoms
+
+for T in np.linspace(300,1700,15):
+    with pylammps('LLZ-full/temp-{0}'.format(T),
+                  atoms=atoms,
+                  masses=True,
+                  atom_style = 'charge',
+                  kspace_style ='ewald 1.0e-5',
+                  pair_style = 'buck/coul/long 8.0',
+                  pair_coeff = [['*', '*', '0.00  0.100000  0.000000'],
+                                ['La', 'O', '5436.827  0.293900  0.000000'],
+                                ['Zr','O', '7290.347  0.261000  0.000000'],
+                                ['O', 'O',   '25.410  0.693700 32.320000'],
+                                ['O', 'Li',  '426.480  0.300000  0.000000']],
+                  temp = T,
+                  run = 10000000) as calc:
+        calc.calculate()
+
+
+#+END_SRC
+
+#+RESULTS:
+: Atoms(symbols='La12Li36O48Zr8', charges=..., positions=..., cell=[[11.0908, 0.0, 0.0], [-3.696893067408336, 10.456520754445437, 0.0], [-3.696893067408336, -5.228174960645745, 9.05566192329556]], pbc=[True, True, True])
+
+
+** Conductivity
+
+#+BEGIN_SRC python
+from pycse import regress
+import matplotlib.pyplot as plt
+import numpy as np
+#temperatures = np.linspace(300,400,2)
+temperatures =[300.0]
+D = []
+for T in temperatures:
+
+    f = 'LLZ-full/temp-{0}/Li.msd'.format(T)
+    t,msd=np.loadtxt(f,skiprows=1,unpack=True)
+    plt.plot(t,msd, label='{0}'.format(T))
+
+    t_cut = t[50000:]
+    msd_cut = msd[50000:]
+
+    t_vec = np.column_stack([t_cut**1, t_cut**0])
+
+    p, pint, se = regress(t_vec, msd_cut, 0.05)
+
+    D.append(p[0]/6.)
+    msd_vec = np.dot(t_vec,p)
+    plt.plot(t_vec, msd_vec)
+
+
+plt.xlabel('Time (ps)')
+plt.ylabel('MSD ($\AA^{2}$)')
+plt.legend(loc = 'best')
+plt.ylim(0,1)
+#plt.savefig('conductivity/images/MSD.png')
+plt.show()
+
+D = np.array(D)
+
+y = np.log(D*10**(-4))
+T_inv = 1000. / np.array(temperatures)
+
+
+
+plt.plot(T_inv, y, 'o')
+
+
+T_vec = np.column_stack([T_inv**1, T_inv**0])
+
+p, pint, se = regress(T_vec, y, 0.10)
+
+y_vec = np.dot(T_vec,p)
+
+plt.plot(T_inv, y_vec,'-')
+plt.show()
+
+Slope = p[0]
+
+Ea = - Slope * 8.6173324 * 10**(-2)
+
+print 'The activation energy is {0} eV'.format(Ea)
+
+# Diffusivity
+
+q = 1.60 * 10**(-19) # Coulombs
+
+kb = 1.3806488* 10 ** (-23) # Boltzmann Constant
+
+N = 36 # No of lithiums
+
+V = 2.17644779471e-21 # cell volume in cm3
+print '\n|T|D|$\sigma$|'
+print '|-'
+
+for d, T in zip(D, temperatures):
+
+    sigma = N/V * (q**2) * d /kb/ T / 10000
+    print '|{0}|{1}|{2}|'.format(T, d, sigma)
+
+#+END_SRC
+
+#+RESULTS:
+: The activation energy is 0.664634680226 eV
+:
+: |T|D|$\sigma$|
+: |-
+: |300.0|6.75684824273e-09|6.90770690397e-08|
+
+
+* Li6
+
+** DONE Reading the QE output file
+
+#+BEGIN_SRC python
+from read_qe_out import read_out
+
+atoms = read_out('Li6.out')
+
+for atom in atoms:
+    if atom.symbol=='Ta':
+        atom.symbol = 'Zr'
+
+print atoms
+print 'Volume = {0} cm^{{3}}'.format(atoms.get_volume() * 10 **(-24))
+#+END_SRC
+
+#+RESULTS:
+: Atoms(symbols='La24Li48O96Zr16', positions=..., cell=[12.959336041835378, 12.959336041835378, 12.959336041835378], pbc=[True, True, True])
+: Volume = 2.17644779471e-21 cm^{3}
+
+
+
+
+
+** DONE Set up
+
+#+BEGIN_SRC python
+
+from ase.io import read
+from ase import Atoms
+from pyLammps import *
+from read_qe_out import read_out
+import numpy as np
+
+atoms = read_out('Li6.out')
+
+for atom in atoms:
+    if atom.symbol=='Ta':
+        atom.symbol = 'Zr'
+
+
+charges = dict([('La',3.00),('Zr',4.00),('O',-2.00),('Li',1.00)])
+
+for atom in atoms:
+     atom.set_charge(charges[atom.get_symbol()])
+
+temperatures = np.linspace(300, 1700, 15)
+
+for T in temperatures:
+
+    with pylammps('Li6/temp-{0}'.format(T),
+               atoms=atoms,
+               masses=True,
+               atom_style = 'charge',
+               kspace_style ='ewald 1.0e-5',
+               pair_style = 'buck/coul/long 8.0',
+               pair_coeff = [['*', '*', '0.00  0.100000  0.000000'],
+                             ['La', 'O', '5436.827  0.293900  0.000000'],
+                             ['Zr','O', '7290.347  0.261000  0.000000'],
+                             ['O', 'O',   '25.410  0.693700 32.320000'],
+                             ['O', 'Li',  '426.480  0.300000  0.000000']],
+               temp = T,
+               run = 20000000) as calc:
+        calc.calculate()
+
+
+#+END_SRC
+
+#+RESULTS:
+
+
+
+
+** Results
+
+
+#+BEGIN_SRC python
+from pycse import regress
+import matplotlib.pyplot as plt
+import numpy as np
+temperatures = np.linspace(600,1600,11)
+D = []
+for T in temperatures:
+
+    f = 'Li6/temp-{0}/Li.msd'.format(T)
+    t,msd=np.loadtxt(f,skiprows=1,unpack=True)
+    plt.plot(t,msd, label='{0}'.format(T))
+
+    t_cut = t[100000:]
+    msd_cut = msd[100000:]
+
+    t_vec = np.column_stack([t_cut**1, t_cut**0])
+
+    p, pint, se = regress(t_vec, msd_cut, 0.05)
+
+    D.append(p[0]/6.)
+    msd_vec = np.dot(t_vec,p)
+    plt.plot(t_vec, msd_vec)
+
+
+plt.xlabel('Time (ps)')
+plt.ylabel('MSD ($\AA^{2}$)')
+plt.legend(loc = 'best')
+#plt.savefig('conductivity/images/MSD.png')
+plt.show()
+
+D = np.array(D)
+
+y = np.log(D*10**(-4))
+T_inv = 1000. / np.array(temperatures)
+
+
+
+plt.plot(T_inv, y, 'o')
+
+
+T_vec = np.column_stack([T_inv**1, T_inv**0])
+
+p, pint, se = regress(T_vec, y, 0.10)
+
+y_vec = np.dot(T_vec,p)
+
+plt.plot(T_inv, y_vec,'-')
+plt.show()
+
+Slope = p[0]
+
+Ea = - Slope * 8.6173324 * 10**(-2)
+
+print 'The activation energy is {0} eV'.format(Ea)
+
+# Diffusivity
+
+q = 1.60 * 10**(-19) # Coulombs
+
+kb = 1.3806488* 10 ** (-23) # Boltzmann Constant
+
+N = 48 # No of lithiums
+
+V = 2.17644779471e-21 # cell volume in cm3
+print '\n|T|D|$\sigma$|'
+print '|-'
+
+for d, T in zip(D, temperatures):
+
+    sigma = N/V * (q**2) * d /kb/ T / 10000
+    print '|{0}|{1}|{2}|'.format(T, d, sigma)
+
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+The activation energy is 0.537529796652 eV
+
+|T|D|$\sigma$|
+|-
+|600.0|0.000835975439968|0.00569760052889|
+|700.0|0.00367466161139|0.0214668855494|
+|800.0|0.0296276380801|0.151445639122|
+|900.0|0.104715525592|0.475793271324|
+|1000.0|0.198709783956|0.812585333993|
+|1100.0|0.208305984533|0.774388313928|
+|1200.0|0.303453402783|1.03409513338|
+|1300.0|0.448599287676|1.41112327718|
+|1400.0|0.560210883964|1.63633882536|
+|1500.0|0.379842734173|1.03552906444|
+|1600.0|0.469394554078|1.19968655703|
+#+end_example
+
+
+* Li6 with tantalum
+
+** DONE Testing potentials from the paper
+
+#+BEGIN_SRC python
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Oxygen potentials
+Pots = [[22764.3, 0.149, 43.], [25.410, 0.6937, 32.32]]
+
+for pot in Pots:
+
+    A, rho, C = pot
+
+    Rs = np.linspace(0.0,3.0)
+    energies=[]
+
+    for r in Rs:
+
+        E = A * np.exp(-r/rho) - C/ (r**6)
+        energies.append(E)
+    plt.plot(Rs, energies)
+
+plt.ylim(-1000,100)
+plt.xlabel('r')
+plt.ylabel('E')
+plt.savefig('Li6-Ta/images/potential-test.png')
+plt.show()
+
+#+END_SRC
+
+#+RESULTS:
+
+It looks like the potentials are pretty similar.
+
+
+** Set up
+
+#+BEGIN_SRC python
+
+from ase.io import read
+from ase import Atoms
+from pyLammps import *
+from read_qe_out import read_out
+import numpy as np
+
+atoms = read_out('Li6.out')
+
+charges = dict([('Ta', 5.00), ('La',3.00),('Zr',4.00),('O',-2.00),('Li',1.00)])
+
+for atom in atoms:
+     atom.set_charge(charges[atom.get_symbol()])
+
+temperatures = np.linspace(300, 1700, 15)
+
+for T in temperatures:
+
+    with pylammps('Li6-Ta/temp-{0}'.format(T),
+               atoms=atoms,
+               masses=True,
+               atom_style = 'charge',
+               kspace_style ='ewald 1.0e-5',
+               pair_style = 'buck/coul/long 8.0',
+               pair_coeff = [['*', '*', '0.00  0.100000  0.000000'],
+                             ['La', 'O', '5436.827  0.293900  0.000000'],
+                             ['Zr','O', '7290.347  0.261000  0.000000'],
+                             ['O', 'O',   '25.410  0.693700 32.320000'],
+                             ['O', 'Ta', '1315.57 0.36905 0.000000'],
+                             ['O', 'Li',  '426.480  0.300000  0.000000']],
+               temp = T,
+               run = 20000000) as calc:
+        calc.calculate()
+
+
+#+END_SRC
+
+#+RESULTS:
+
+
+** Conductivity
+
+
+
+#+BEGIN_SRC python
+from pycse import regress
+import matplotlib.pyplot as plt
+import numpy as np
+temperatures = np.linspace(300,1700,15)
+D = []
+for T in temperatures:
+
+    f = 'Li6-Ta/temp-{0}/Li.msd'.format(T)
+    t,msd=np.loadtxt(f,skiprows=1,unpack=True)
+    plt.plot(t,msd, label='{0}'.format(T))
+
+    t_cut = t[50000:]
+    msd_cut = msd[50000:]
+
+    t_vec = np.column_stack([t_cut**1, t_cut**0])
+
+    p, pint, se = regress(t_vec, msd_cut, 0.05)
+
+    D.append(p[0]/6.)
+    msd_vec = np.dot(t_vec,p)
+    plt.plot(t_vec, msd_vec)
+
+
+plt.xlabel('Time (ps)')
+plt.ylabel('MSD ($\AA^{2}$)')
+plt.legend(loc = 'best')
+#plt.savefig('conductivity/images/MSD.png')
+plt.show()
+
+D = np.array(D)
+
+y = np.log(D*10**(-4))
+T_inv = 1000. / np.array(temperatures)
+
+
+
+plt.plot(T_inv, y, 'o')
+
+
+T_vec = np.column_stack([T_inv**1, T_inv**0])
+
+p, pint, se = regress(T_vec, y, 0.10)
+
+y_vec = np.dot(T_vec,p)
+
+plt.plot(T_inv, y_vec,'-')
+plt.show()
+
+Slope = p[0]
+
+Ea = - Slope * 8.6173324 * 10**(-2)
+
+print 'The activation energy is {0} eV'.format(Ea)
+
+# Diffusivity
+
+q = 1.60 * 10**(-19) # Coulombs
+
+kb = 1.3806488* 10 ** (-23) # Boltzmann Constant
+
+N = 48 # No of lithiums
+
+V = 2.17644779471e-21 # cell volume in cm3
+print '\n|T|D|$\sigma$|'
+print '|-'
+
+for d, T in zip(D, temperatures):
+
+    sigma = N/V * (q**2) * d /kb/ T / 10000
+    print '|{0}|{1}|{2}|'.format(T, d, sigma)
+
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+The activation energy is 0.423258253234 eV
+
+|      T |                 D |         $\sigma$ |
+|--------+-------------------+------------------|
+|  500.0 | 0.000761962501939 | 0.00623179736602 |
+|  700.0 |   0.0204325958313 |   0.119364513681 |
+|  900.0 |   0.0784853033713 |   0.356611677504 |
+| 1100.0 |    0.165462148729 |   0.615114129631 |
+| 1300.0 |    0.367305112106 |    1.15540262269 |
+| 1500.0 |    0.615952584113 |    1.67921285781 |
+#+end_example
+
+
+
+* Sneha's input
+
+#+BEGIN_SRC python
+
+from pycse import regress
+import matplotlib.pyplot as plt
+import numpy as np
+#temperatures = np.linspace(300,400,2)
+temperatures =[300.0]
+D = []
+for T in temperatures:
+
+    f = 'msd/sneha3/Li.msd'.format(T)
+    t,msd=np.loadtxt(f,skiprows=1,unpack=True)
+#    t = np.array(t)/1000
+    plt.plot(t,msd, label='{0}'.format(T))
+
+    t_cut = t[50000:]
+    msd_cut = msd[50000:]
+
+    t_vec = np.column_stack([t_cut**1, t_cut**0])
+
+    p, pint, se = regress(t_vec, msd_cut)
+
+    D.append(p[0]/6.)
+    msd_vec = np.dot(t_vec,p)
+    plt.plot(t_cut, msd_vec)
+
+print D
+plt.xlabel('Time (ps)')
+plt.ylabel('MSD ($\AA^{2}$)')
+plt.legend(loc = 'best')
+#plt.ylim(0,1)
+#plt.savefig('conductivity/images/MSD.png')
+
+
+q = 1.60 * 10**(-19) # Coulombs
+
+kb = 1.3806488* 10 ** (-23) # Boltzmann Constant in SI units
+
+N = 28 # No of lithiums
+
+V = 1.0921e-21 # cell volume in cm^{3}
+print '\n|T|D|$\sigma$|'
+print '|-'
+
+for d, T in zip(D, temperatures):
+
+    d= d*1e-4
+
+    sigma = N/V * (q**2) * d /kb/ T
+    print '|{0}|{1}|{2}|'.format(T, d, sigma)
+
+plt.show()
+
+
+#+END_SRC
+
+#+RESULTS:
+: [0.0039221933052540929]
+:
+: |T|D|$\sigma$|
+: |-
+: |300.0|3.92219330525e-07|0.0621527156529|

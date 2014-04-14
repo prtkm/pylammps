@@ -1,109 +1,52 @@
 LAMMPS (14 Mar 2014)
-# (written by pyLammps)
+### LAMMPS Input Feb 25 2014 Sneha Akhade ###
 
-atom_style charge
-units metal
-boundary p p p
-read_data data.lmp
-  triclinic box = (0 0 0) to (11.0908 10.4565 9.05566) with tilt (-3.69689 -3.69689 -5.22817)
-  2 by 2 by 1 MPI processor grid
+## LiLaZrO garnet - Bush+Woodley rigid ion potential
+
+# Initiation
+units           metal
+atom_style      charge
+boundary        p p p
+read_data	LLZ.data
+  triclinic box = (0 0 0) to (11.2401 10.4629 9.28714) with tilt (-4.10702 -3.56652 -5.23143)
+  1 by 1 by 1 MPI processor grid
   reading atoms ...
-  104 atoms
+  96 atoms
 
-# Groups
-group La type 1
+# Atom definition
+group		La type 1
 12 atoms in group La
-group Li type 2
-36 atoms in group Li
-group O type 3
-48 atoms in group O
-group Zr type 4
+group		Zr type 2
 8 atoms in group Zr
+group		O  type 3
+48 atoms in group O
+group		Li type 4
+28 atoms in group Li
+set		group La charge 3.00
+  12 settings made for charge
+mass		1 138.91
+set 		group Zr charge 4.00
+  8 settings made for charge
+mass		2 91.224
+set		group O charge -2.00
+  48 settings made for charge
+mass		3 15.999
+set		group Li charge 1.00
+  28 settings made for charge
+mass		4 6.941
 
-### interactions
-kspace_style ewald 1.0e-5
-pair_style buck/coul/long 8.0
-pair_coeff * * 0.00  0.100000  0.000000
-pair_coeff 1 3 5436.827  0.293900  0.000000
-pair_coeff 3 4 7290.347  0.261000  0.000000
-pair_coeff 3 3 25.410  0.693700 32.320000
-pair_coeff 2 3 426.480  0.300000  0.000000
+# Interatomic potential
+kspace_style	ewald  1.0e-5
+pair_style      buck/coul/long 8.0
 
-fix 1 all nvt temp 2700 2700 100
-compute msd all msd
-compute msdLa La msd
-compute msdLi Li msd
-compute msdO O msd
-compute msdZr Zr msd
+pair_coeff      * *     0.00  0.100000  0.000000
+pair_coeff      1 3 5436.827  0.293900  0.000000
+pair_coeff	2 3 7290.347  0.261000  0.000000
+pair_coeff	3 3   25.410  0.693700 32.320000
+pair_coeff	3 4  426.480  0.300000  0.000000
 
-thermo 100
-thermo_style custom step time temp pe ke etotal press
-dump            1 all custom 100 xyz.dat id type x y z
-dump            2 all custom 100 velocity.dat id type vx vy vz
-dump            3 all custom 100 forces.dat id type fx fy fz
-
-variable t equal step*dt
-variable msd_tot equal c_msd[4]
-fix tot_msd all print 100  "${t}    ${msd_tot}" file total.msd screen no
-variable msd_La equal c_msdLa[4]
-fix La_msd all print 100 "${t}    ${msd_La}" file La.msd screen no
-variable msd_Li equal c_msdLi[4]
-fix Li_msd all print 100 "${t}    ${msd_Li}" file Li.msd screen no
-variable msd_O equal c_msdO[4]
-fix O_msd all print 100 "${t}    ${msd_O}" file O.msd screen no
-variable msd_Zr equal c_msdZr[4]
-fix Zr_msd all print 100 "${t}    ${msd_Zr}" file Zr.msd screen no
-
-run 2000
-Ewald initialization ...
-WARNING: System is not charge neutral, net charge = 8 (../ewald.cpp:136)
-  G vector (1/distance) = 0.424
-  estimated absolute RMS force accuracy = 0.000147115
-  estimated relative force accuracy = 1.02166e-05
-  KSpace vectors: actual max1d max3d = 100 6 1098
-                  kxmax kymax kzmax  = 6 3 1
-Memory usage per processor = 6.1372 Mbytes
-Step Time Temp PotEng KinEng TotEng Press 
-       0            0            0   -2156.2349            0   -2156.2349    240423.61 
-     100          0.1    389.25135   -2161.4516    5.1824127   -2156.2692    163818.91 
-     200          0.2     290.8073   -2160.1214    3.8717487   -2156.2496    129204.26 
-     300          0.3    272.87341   -2159.8786    3.6329807   -2156.2456    160245.33 
-     400          0.4    424.01682   -2161.9113     5.645273    -2156.266    189625.01 
-     500          0.5    323.16762   -2160.5545    4.3025874   -2156.2519    250926.81 
-     600          0.6    614.55125   -2164.4611    8.1820094   -2156.2791     218568.3 
-     700          0.7    315.87213   -2160.4477    4.2054568   -2156.2423    163751.45 
-     800          0.8    433.60381   -2162.0223    5.7729122   -2156.2494    200781.25 
-     900          0.9    563.93002   -2163.7825    7.5080486   -2156.2745    234788.46 
-    1000            1     326.1352   -2160.5901    4.3420972    -2156.248    278577.88 
-    1100          1.1     441.8774   -2162.1466    5.8830651   -2156.2635    286153.98 
-    1200          1.2    392.96823   -2161.4848    5.2318985   -2156.2529    215556.63 
-    1300          1.3    325.71569   -2160.5826    4.3365119   -2156.2461    203449.67 
-    1400          1.4    420.36016   -2161.8553    5.5965889   -2156.2587    250341.94 
-    1500          1.5    358.26234   -2161.0196    4.7698313   -2156.2498    258634.35 
-    1600          1.6    393.09714   -2161.4887    5.2336147    -2156.255    241289.41 
-    1700          1.7    377.54527   -2161.2787    5.0265603   -2156.2522    217114.21 
-    1800          1.8    323.04844     -2160.55    4.3010007    -2156.249    205869.92 
-    1900          1.9    367.62111   -2161.1475     4.894432    -2156.253    236630.44 
-    2000            2    393.40902   -2161.4907     5.237767   -2156.2529    254664.15 
-Loop time of 0.571291 on 4 procs for 2000 steps with 104 atoms
-
-Pair  time (%) = 0.377576 (66.0918)
-Kspce time (%) = 0.0746605 (13.0687)
-Neigh time (%) = 0 (0)
-Comm  time (%) = 0.0921308 (16.1268)
-Outpt time (%) = 0.00515991 (0.903203)
-Other time (%) = 0.0217631 (3.80947)
-
-Nlocal:    26 ave 26 max 26 min
-Histogram: 4 0 0 0 0 0 0 0 0 0
-Nghost:    2386 ave 2388 max 2384 min
-Histogram: 2 0 0 0 0 0 0 0 0 2
-Neighs:    5393 ave 5404 max 5372 min
-Histogram: 1 0 0 0 0 0 1 0 0 2
-
-Total # of neighbors = 21572
-Ave neighs/atom = 207.423
-Neighbor list builds = 0
-Dangerous builds = 0
-
-# END
+# Simulation parameters (set Tdamp~30-50 for T < 500 K)
+fix             1 all nvt temp 300 300 30
+compute         msd all msd
+compute         msdLi 4 msd
+ERROR: Could not find compute group ID (../compute.cpp:53)

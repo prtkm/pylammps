@@ -327,7 +327,11 @@ $MPI_CMD $LAMMPS < input.lmp'''
                 for dump in parameters['dumps']:
                     f.write('dump {0}\n'.format(dump)
 
-        
+            if 'dump_modify' in parameters:
+                for dump_modify in parameters['dump_modify']:
+                            f.write('dump_modify {0}\n'.format(dump_modify))
+
+                            
             if 'dt' in parameters:
                 dt = parameters['dt']
                 f.write('timestep %s' %dt)

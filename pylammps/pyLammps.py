@@ -325,7 +325,7 @@ $MPI_CMD $LAMMPS < input.lmp'''
 
             if 'dumps' in parameters:
                 for dump in parameters['dumps']:
-                    f.write('dump {0}\n'.format(dump)
+                    f.write('dump {0}\n'.format(dump))
 
             if 'dump_modify' in parameters:
                 for dump_modify in parameters['dump_modify']:
